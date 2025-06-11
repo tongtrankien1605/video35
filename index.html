@@ -150,7 +150,7 @@
         <script>
             // Đặt các biến toàn cục
             const BASE_URL_VIDEO = "https://cdn.anh.moe/s9/";
-            const VIDEOS_JSON_URL = "/video35/videos.json";
+            const VIDEOS_JSON_URL = "/tiktok-clone/videos.json";
 
             // Biến để lưu trữ danh sách video và trạng thái
             let videoUrls = [];
@@ -209,7 +209,7 @@
                     slide.className = "video-slide";
                     slide.innerHTML = `
                         <div class="video-wrapper">
-                            <video src="${video.url}" playsinline preload="auto" autoplay></video>
+                            <video src="${video.url}" playsinline preload="auto" ${index === 2 ? 'autoplay' : ''}></video>
                             <div class="progress-bar"><div class="progress"></div></div>
                             <div class="info"><p>${video.description || "Không có mô tả"}</p></div>
                         </div>
@@ -224,10 +224,10 @@
                 });
 
                 requestAnimationFrame(() => {
-                    if (document.querySelectorAll(".video-slide").length === 3) {
+                    if (document.querySelectorAll(".video-slide").length === 5) {
                         setupVideos();
                         container.style.overflowY = "scroll";
-                        container.scrollTop = window.innerHeight;
+                        container.scrollTop = window.innerHeight * 2; // Cuộn đến video hiện tại (index 2)
                     } else {
                         console.warn("Chưa render đủ slide, thử lại...");
                         setTimeout(() => loadVideos(isReload), 100);
@@ -241,9 +241,17 @@
             }
 
             function getOrderedVideos() {
-                const prevIndex = (currentIndex - 1 + videoUrls.length) % videoUrls.length;
-                const nextIndex = (currentIndex + 1) % videoUrls.length;
-                return [videoUrls[prevIndex], videoUrls[currentIndex], videoUrls[nextIndex]];
+                const prevIndex2 = (currentIndex - 2 + videoUrls.length) % videoUrls.length;
+                const prevIndex1 = (currentIndex - 1 + videoUrls.length) % videoUrls.length;
+                const nextIndex1 = (currentIndex + 1) % videoUrls.length;
+                const nextIndex2 = (currentIndex + 2) % videoUrls.length;
+                return [
+                    videoUrls[prevIndex2],
+                    videoUrls[prevIndex1],
+                    videoUrls[currentIndex],
+                    videoUrls[nextIndex1],
+                    videoUrls[nextIndex2]
+                ];
             }
 
             function setupVideos() {
@@ -272,12 +280,18 @@
                             const index = Array.from(videos).indexOf(video);
                             if (entry.isIntersecting && !isReloading) {
                                 if (index === 0) {
-                                    currentIndex = (currentIndex - 1 + videoUrls.length) % videoUrls.length;
-                                    loadVideos(true);
-                                } else if (index === 2) {
-                                    currentIndex = (currentIndex + 1) % videoUrls.length;
+                                    currentIndex = (currentIndex - 2 + videoUrls.length) % videoUrls.length;
                                     loadVideos(true);
                                 } else if (index === 1) {
+                                    currentIndex = (currentIndex - 1 + videoUrls.length) % videoUrls.length;
+                                    loadVideos(true);
+                                } else if (index === 3) {
+                                    currentIndex = (currentIndex + 1) % videoUrls.length;
+                                    loadVideos(true);
+                                } else if (index === 4) {
+                                    currentIndex = (currentIndex + 2) % videoUrls.length;
+                                    loadVideos(true);
+                                } else if (index === 2) {
                                     if (!isFirstLoad) {
                                         video.play().catch(() => console.warn("Lỗi phát video:", video.src));
                                     }
