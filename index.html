@@ -150,7 +150,7 @@
         <script>
             // Đặt các biến toàn cục
             const BASE_URL_VIDEO = "https://cdn.anh.moe/s9/";
-            const VIDEOS_JSON_URL = "/tiktok-clone/videos.json";
+            const VIDEOS_JSON_URL = "/video35/videos.json";
 
             // Biến để lưu trữ danh sách video và trạng thái
             let videoUrls = [];
@@ -185,7 +185,7 @@
                         }));
                 } catch (e) {
                     console.error("Lỗi tải video:", e);
-                    container.innerHTML = '<p class="error-message">Không có video</p>';
+                    container.innerHTML = '<p class="error-message">Không tải được video, vui lòng thử lại sau!</p>';
                     isReloading = false;
                     return;
                 }
@@ -209,7 +209,7 @@
                     slide.className = "video-slide";
                     slide.innerHTML = `
                         <div class="video-wrapper">
-                            <video src="${video.url}" playsinline preload="${index === 1 ? "auto" : "none"}" autoplay></video>
+                            <video src="${video.url}" playsinline preload="auto" autoplay></video>
                             <div class="progress-bar"><div class="progress"></div></div>
                             <div class="info"><p>${video.description || "Không có mô tả"}</p></div>
                         </div>
